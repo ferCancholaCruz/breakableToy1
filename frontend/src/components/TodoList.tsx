@@ -17,6 +17,9 @@ interface DatosForm {
   priority: string;
 }
 
+// same comment as backend code, use english for everything
+
+// this component is big and probably has a lot of responsibilities, try creatikng other subcomponents and divide the responsibilities
 const TodoList = () => {
   const [tareas, setTareas] = useState<Todo[]>([]);
   const [editandoId, setEditandoId] = useState<number | null>(null);
@@ -129,6 +132,7 @@ const toggleSort = (columna: "Priority" | "DueDate") => {
   cargarTareas(orden);
 };
 
+// I've seen that as good practice methods that call APIs are in a single file in some kind of service layer in the frontend code
 
 const getArrow = (state: "none" | "asc" | "desc") => {
   if (state === "asc") return "🔼";
@@ -167,7 +171,8 @@ const getArrow = (state: "none" | "asc" | "desc") => {
   };
 
   
-
+  // same comment, this UI is big, try creating subcomponents and give them specific responsiblities
+  // (and then move the specific code for that responsibility to the subcomponent file)
   return (
     <div>
       <h2>Create new task</h2>
