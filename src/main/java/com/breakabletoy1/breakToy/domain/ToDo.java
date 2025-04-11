@@ -6,14 +6,14 @@ public class ToDo{
     private int ID;
     private String name;
     private LocalDate dueDate;
-    private boolean flag;
+    private boolean flagDone;
     private LocalDate doneDate;
     private String priority;
     private LocalDate creationDate;
 
 
     //Constructor
-    public ToDo(int ID, String name, boolean flag, String priority, LocalDate creationDate, LocalDate doneDate) {
+    public ToDo(int ID, String name, boolean flagDone, String priority, LocalDate creationDate, LocalDate doneDate) {
 
         if (name == null || name.length() >120) {
             throw new IllegalArgumentException("La descripción sobrepasa los 120 caracteres o es nula");
@@ -21,7 +21,7 @@ public class ToDo{
 
         this.ID = ID;
         this.name = name;
-        this.flag = flag;
+        this.flagDone = flagDone;
         this.priority = priority;
         this.creationDate = creationDate;
         this.doneDate = doneDate;
@@ -51,12 +51,12 @@ public class ToDo{
             this.dueDate = dueDate;
         }
 
-        public boolean getFlag() {
-            return flag;
+        public boolean getFlagDone() {
+            return flagDone;
         }
 
-        public void setFlag(boolean flag) {
-            this.flag = flag;
+        public void setFlagDone(boolean flagDone) {
+            this.flagDone = flagDone;
         }
 
         public LocalDate getDoneDate() {

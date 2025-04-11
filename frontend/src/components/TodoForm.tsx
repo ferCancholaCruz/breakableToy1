@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../styles/TodoStyles.css";
 
 interface DatosForm {
   name: string;
@@ -29,12 +30,18 @@ const TodoForm = ({ modo, valoresIniciales, onSubmit }: TodoFormProps) => {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!datos.name || datos.name.length > 120) {
-      alert("El nombre es obligatorio y no debe tener más de 120 caracteres.");
+      alert("Name is necessary or it cant be more than 120 letters");
       return;
+    }
+
+    if (datos.priority === "") {
+      alert("Please select a priority before submitting.");
+      return; 
     }
     onSubmit(datos);
     if (modo === "crear") {
       setDatos({ name: "", dueDate: "", priority: "" });
+      
     }
   }
 
@@ -59,13 +66,13 @@ const TodoForm = ({ modo, valoresIniciales, onSubmit }: TodoFormProps) => {
         value={datos.priority}
         onChange={handleChange}
       >
-        <option value="">Seleccionar</option>
+        <option value="">Priority</option>
         <option value="High">High</option>
         <option value="Medium">Medium</option>
         <option value="Low">Low</option>
       </select>
       <button type="submit">
-        {modo === "crear" ? "Crear tarea" : "Guardar cambios"}
+        {modo === "crear" ? "Create task" : "Save changes"}
       </button>
     </form>
   );
