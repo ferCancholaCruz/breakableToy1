@@ -46,7 +46,7 @@ describe("TodoList", () => {
 
     fireEvent.change(screen.getByLabelText("Name"), {
       target: { value: "Sample" },
-    });
+    }); 
 
     fireEvent.click(screen.getByText("Search"));
 
