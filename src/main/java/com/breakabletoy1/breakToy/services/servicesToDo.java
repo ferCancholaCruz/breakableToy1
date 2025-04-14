@@ -1,5 +1,6 @@
 package com.breakabletoy1.breakToy.services;
 
+import com.breakabletoy1.breakToy.repositoryLayer.ToDoRepository;
 import com.breakabletoy1.breakToy.domain.ToDo;
 import com.breakabletoy1.breakToy.helpers.ToDoControllerHelper;
 import com.breakabletoy1.breakToy.sorts.SortBoth;
@@ -15,41 +16,34 @@ import java.util.stream.Collectors;
 public class servicesToDo {
 
     private static final int PAGE_SIZE = 10;
+    private final ToDoRepository repository;
 
-    private final List<ToDo> tasks = new ArrayList<>(List.of(
-            new ToDo(123, "Sample Task 1", true, "High",
-                    LocalDate.parse("2025-02-10"),
-                    LocalDate.parse("2025-02-20"))
-    ));
+    public servicesToDo(ToDoRepository repository) {
+        this.repository = repository;
+    }
 
     public List<ToDo> getFilteredTasks(int page, String order, Boolean done, String name, String priority) {
-        List<ToDo> filtered = new ArrayList<>(tasks);
+        List<ToDo> filtered = new ArrayList<>(repository.findAll());
 
-        // Filter by done
         if (done != null) {
             filtered = filtered.stream()
                     .filter(task -> task.getFlagDone() == done)
                     .collect(Collectors.toList());
         }
 
-        // Filter by name
         if (name != null) {
             filtered = filtered.stream()
                     .filter(task -> task.getName().contains(name))
                     .collect(Collectors.toList());
         }
 
-        // Filter by priority
         if (priority != null) {
             filtered = filtered.stream()
                     .filter(task -> priority.equalsIgnoreCase(task.getPriority()))
                     .collect(Collectors.toList());
         }
 
-        // Apply sorting
         filtered = applySorting(filtered, order);
-
-        // Apply pagination
         return paginate(page, filtered);
     }
 
@@ -63,7 +57,6 @@ public class servicesToDo {
             case "DueDateDesc" -> tasks.sort(Collections.reverseOrder(new SortDueDate()));
             case "BothAsc" -> tasks.sort(new SortBoth());
             case "BothDesc" -> tasks.sort(Collections.reverseOrder(new SortBoth()));
-
             case "PriorityAscDueDesc" -> tasks.sort((a, b) -> {
                 int p1 = ToDoControllerHelper.getPriorityValue(a.getPriority());
                 int p2 = ToDoControllerHelper.getPriorityValue(b.getPriority());
@@ -74,7 +67,6 @@ public class servicesToDo {
                 }
                 return comp;
             });
-
             case "PriorityDescDueAsc" -> tasks.sort((a, b) -> {
                 int p1 = ToDoControllerHelper.getPriorityValue(a.getPriority());
                 int p2 = ToDoControllerHelper.getPriorityValue(b.getPriority());
@@ -98,62 +90,50 @@ public class servicesToDo {
     }
 
     public ToDo create(ToDo todo) {
-        int newID = tasks.isEmpty() ? 1 : tasks.get(tasks.size() - 1).getID() + 1;
-        todo.setID(newID);
+        todo.setID(repository.getNextId());
         todo.setCreationDate(LocalDate.now());
-        tasks.add(todo);
-        return todo;
+        return repository.save(todo);
     }
 
-    public ToDo deleteById(int id){
-        return tasks.stream()
-                .filter(t -> t.getID() == id)
-                .findFirst()
-                .map(task -> {
-                    tasks.remove(task);
-                    return task;
-
-                })
+    public ToDo deleteById(int id) {
+        ToDo task = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found with ID: " + id));
+        repository.delete(id);
+        return task;
     }
 
     public ToDo update(int id, ToDo input) {
-        return tasks.stream()
-                .filter(t -> t.getID() == id)
-                .findFirst()
-                .map(task -> {
-                    if (input.getName() == null || input.getName().length() > 120) {
-                        throw new IllegalArgumentException("Name cannot be null or longer than 120 characters");
-                    }
-                    task.setName(input.getName());
-                    task.setDueDate(input.getDueDate());
-                    task.setPriority(input.getPriority());
-                    return task;
-                })
+        ToDo task = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found with ID " + id));
+
+        if (input.getName() == null || input.getName().length() > 120) {
+            throw new IllegalArgumentException("Name cannot be null or longer than 120 characters");
+        }
+
+        task.setName(input.getName());
+        task.setDueDate(input.getDueDate());
+        task.setPriority(input.getPriority());
+
+        return repository.save(task);
     }
 
     public ToDo markDone(int id) {
-        return tasks.stream()
-                .filter(t -> t.getID() == id)
-                .findFirst()
-                .map(task -> {
-                    task.setFlagDone(true);
-                    task.setDoneDate(LocalDate.now());
-                    return task;
-                })
+        ToDo task = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found with ID " + id));
+
+        task.setFlagDone(true);
+        task.setDoneDate(LocalDate.now());
+
+        return repository.save(task);
     }
 
     public ToDo markUndone(int id) {
-        return tasks.stream()
-                .filter(t -> t.getID() == id)
-                .findFirst()
-                .map(task -> {
-                    task.setFlagDone(false);
-                    task.setDoneDate(null);
-                    return task;
-                })
+        ToDo task = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found with ID " + id));
+
+        task.setFlagDone(false);
+        task.setDoneDate(null);
+
+        return repository.save(task);
     }
 }

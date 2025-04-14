@@ -1,46 +1,57 @@
-# Getting Started with Create React App
+## BreakToy - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the frontend of BreakToy, a task management system built with React and TypeScript. It allows users to create, view, update, delete, and filter tasks based on priority, status, and due date. The UI also provides real-time averages for task completion times by priority level.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Add, edit, and delete tasks
+- Mark tasks as done or undone
+- Filter tasks by name, priority, and status
+- Sort tasks by priority and due date
+- Paginate task results
+- Display average completion time per priority level
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- React (with TypeScript)
+- CSS (`styles/TodoStyles.css`)
+- Fetch API for HTTP requests
+- Functional components and hooks (`useState`, `useEffect`)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Folder Structure
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Requirements
 
-### `npm run build`
+- Node.js v18+
+- npm or yarn
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Setup and Run
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Navigate to the frontend directory
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+bash
+cd frontend
 
-### `npm run eject`
+2. Install dependencies
+npm install
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+3.  Start the development server
+npm run start
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## API Communication
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+This frontend expects the backend REST API to be available at:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+http://localhost:9090/todos
 
-## Learn More
+## Sample Task JSON (used in POST/PUT requests)
+{
+  "name": "Sample Task ",
+  "dueDate": "2025-04-20",
+  "priority": "Medium"
+}
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Author
+Canchola Cruz Fernando
+Spark Program
