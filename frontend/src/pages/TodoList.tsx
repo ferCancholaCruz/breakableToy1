@@ -223,7 +223,7 @@ const TodoList = () => {
 
       <div className="averages-container">
         <div className="average-block">
-          <p><strong>Overall average:</strong> {averageAll.toFixed(2)} minutes</p>
+          <p><strong>Overall average: </strong> {averageAll.toFixed(2)} minutes</p>
         </div>
         <div className="average-block">
           <p>High Priority: {averageHigh.toFixed(2)} minutes</p>
