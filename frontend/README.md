@@ -11,6 +11,7 @@ This is the frontend of BreakToy, a task management system built with React and 
 - Paginate task results
 - Display average completion time per priority level
 
+
 ## Technologies Used
 
 - React (with TypeScript)
