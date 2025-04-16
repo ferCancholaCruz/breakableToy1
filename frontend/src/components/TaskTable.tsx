@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TodoForm from "./TodoForm";
 import "../styles/TodoStyles.css";
 
@@ -27,6 +27,8 @@ interface TaskTableProps {
   averageMedium: number;
   averageLow: number;
   averageAll: number;
+  onCheckAll: () => void;
+  onUncheckAll: () => void;
 }
 
 const getRowStyle = (dueDate: string | null) => {
@@ -41,6 +43,13 @@ const getRowStyle = (dueDate: string | null) => {
   return {};
 };
 
+const getFont = (done: boolean): string => {
+  return done ? "doneTask" : "";
+};
+
+
+
+
 const getArrow = (state: "none" | "asc" | "desc") => {
   if (state === "asc") return "\u25B2";
   if (state === "desc") return "\u25BC";
@@ -48,6 +57,7 @@ const getArrow = (state: "none" | "asc" | "desc") => {
 };
 
 const TaskTable: React.FC<TaskTableProps> = ({
+  
   tasks,
   editandoId,
   setEditandoId,
@@ -61,12 +71,31 @@ const TaskTable: React.FC<TaskTableProps> = ({
   averageMedium,
   averageLow,
   averageAll,
-}) => (
+  onCheckAll,
+  onUncheckAll
+}) => {
+  const [checkAllActive, setCheckAllActive] = useState(false);
+
+  
+
+  return(
   <>
     <table className="task-table">
       <thead>
         <tr>
-          <th>Done</th>
+        <th>
+        <input type="checkbox" checked={checkAllActive} onChange={() => {
+          if (checkAllActive) {
+            onCheckAll();
+          } else {
+            onUncheckAll();
+          }
+          setCheckAllActive(!checkAllActive);
+        }}
+          
+          />
+          Done
+          </th>
           <th>Name</th>
           <th onClick={() => toggleSort("Priority")} style={{ cursor: "pointer" }}>Priority {getArrow(priorityArrow)}</th>
           <th onClick={() => toggleSort("DueDate")} style={{ cursor: "pointer" }}>Due Date {getArrow(dueArrow)}</th>
@@ -90,15 +119,16 @@ const TaskTable: React.FC<TaskTableProps> = ({
               modo="editar"
               valoresIniciales={{ name: t.name, dueDate: t.dueDate, priority: t.priority }}
               onSubmit={(datos) => editarTarea(t.id, datos)}
+              onCancel={() => setEditandoId(null)}
             />
           </td>
-          <td>
+          {/* <td>
             <button onClick={() => setEditandoId(null)}>Cancel</button>
-          </td>
+          </td> */}
         </>
       ) : (
         <>
-          <td>{t.name}</td>
+          <td className={getFont(t.done)}>{t.name}</td>
           <td>{t.priority}</td>
           <td>{t.dueDate}</td>
           <td>{t.doneDate || "-"}</td>
@@ -117,5 +147,6 @@ const TaskTable: React.FC<TaskTableProps> = ({
     {}
   </>
 );
+}
 
 export default TaskTable;

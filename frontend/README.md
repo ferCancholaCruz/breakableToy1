@@ -18,7 +18,22 @@ This is the frontend of BreakToy, a task management system built with React and 
 - Fetch API for HTTP requests
 - Functional components and hooks (`useState`, `useEffect`)
 
-## Folder Structure
+## Testing
+
+E2E Prerequisites
+
+Backend running at http://localhost:9090
+
+Frontend running at http://localhost:8080
+
+Node.js and npm installed
+
+Cypress installed: npm install cypress --save-dev
+
+Execute the command: npx cypress run
+
+Unit testing: npm run tests
+**While in the frontend source
 
 
 ## Requirements

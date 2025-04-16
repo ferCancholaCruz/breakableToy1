@@ -11,9 +11,10 @@ interface TodoFormProps {
   modo: "crear" | "editar";
   valoresIniciales?: DatosForm;
   onSubmit: (datos: DatosForm) => void;
+  onCancel?: () => void;
 }
 
-const TodoForm = ({ modo, valoresIniciales, onSubmit }: TodoFormProps) => {
+const TodoForm = ({ modo, valoresIniciales, onSubmit, onCancel }: TodoFormProps) => {
   const [datos, setDatos] = useState<DatosForm>(
     valoresIniciales || {
       name: "",
@@ -46,7 +47,7 @@ const TodoForm = ({ modo, valoresIniciales, onSubmit }: TodoFormProps) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="todo-form">
       <input
         name="name"
         type="text"
@@ -73,6 +74,10 @@ const TodoForm = ({ modo, valoresIniciales, onSubmit }: TodoFormProps) => {
       </select>
       <button type="submit">
         {modo === "crear" ? "Create task" : "Save changes"}
+      </button>
+      <button type="button" onClick={onCancel}>
+        Cancel
+       
       </button>
     </form>
   );
