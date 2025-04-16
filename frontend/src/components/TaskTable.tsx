@@ -76,7 +76,6 @@ const TaskTable: React.FC<TaskTableProps> = ({
 }) => {
   const [checkAllActive, setCheckAllActive] = useState(false);
 
-  
 
   return(
   <>
