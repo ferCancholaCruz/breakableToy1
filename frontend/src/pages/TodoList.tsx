@@ -34,9 +34,12 @@ const TodoList = () => {
   const [averageLow, setAverageLow] = useState(0);
   const [averageAll, setAverageAll] = useState(0);
   const [showForm, setShowForm] = useState(false);
+  const [currentOrder, setCurrentOrder] = useState<string | undefined>();
+  const [filterString, setFilterString] = useState<string>("");
+
 
   useEffect(() => {
-    loadTasks();
+    loadTasks(currentOrder, filterString);
   }, [currentPage]);
 
   useEffect(() => {
@@ -44,6 +47,8 @@ const TodoList = () => {
   }, [tasks]);
 
   const loadTasks = async (order?: string, filters: string = "") => {
+    setCurrentOrder(order);           
+    setFilterString(filters);
     const rawData = await fetchTasks(currentPage, order, filters) || [];
     const transformed = rawData.map((task: any) => ({
       ...task,
@@ -63,6 +68,7 @@ const TodoList = () => {
     const filterString = filters.length > 0 ? filters.join("&") : "";
     loadTasks(undefined, filterString);
   };
+
 
   const toggleSort = (column: "Priority" | "DueDate") => {
     let newPriority = priorityArrow;
@@ -93,11 +99,11 @@ const TodoList = () => {
     list.forEach((t) => {
       if (t.done && t.creationDate && t.doneDate) {
         const diff = new Date(t.doneDate).getTime() - new Date(t.creationDate).getTime();
-        const hours = Math.ceil(diff / (1000 * 60 * 60 ));
-        console.log(`✅ Task "${t.name}" with priority ${t.priority} took ${hours} hours`);
-        if (t.priority === "High") high.push(hours);
-        else if (t.priority === "Medium") medium.push(hours);
-        else if (t.priority === "Low") low.push(hours);
+        const minutes = Math.ceil(diff / (1000 * 60 ));
+        console.log(`✅ Task "${t.name}" with priority ${t.priority} took ${minutes} minutes`);
+        if (t.priority === "High") high.push(minutes);
+        else if (t.priority === "Medium") medium.push(minutes);
+        else if (t.priority === "Low") low.push(minutes);
       }
     });
     const total = (arr: number[]) => arr.reduce((sum, val) => sum + val, 0);
@@ -108,10 +114,26 @@ const TodoList = () => {
     setAverageAll(avg([...high, ...medium, ...low]));
   };
 
-  const flagDone = async (id: number, done: boolean) => {
+  const flagDone = async (id: number, done: boolean, shouldReload = true) => {
     await (done ? markTaskUndone(id) : markTaskDone(id));
-    loadTasks();
+    if (shouldReload) {
+      await loadTasks(currentOrder, filterString);
+    }
   };
+  
+
+  const checkAll = async () => {
+    await Promise.all(tasks.map(t => flagDone(t.id, true, false)));
+    await loadTasks(currentOrder, filterString);
+  };
+  
+  const uncheckAll = async () => {
+    await Promise.all(tasks.map(t => flagDone(t.id, false, false)));
+    await loadTasks(currentOrder, filterString);
+  };
+  
+  
+  
 
   const deleteTaskById = async (id: number) => {
     await deleteTask(id);
@@ -132,7 +154,7 @@ const TodoList = () => {
 
   return (
     <div>
-      <h2>Task Manager</h2>
+      <h2 className="task-title">Task Manager</h2>
       
       <div className="filter-box">
       <TaskFilters
@@ -148,7 +170,8 @@ const TodoList = () => {
         + Add New Task
       </button>
       )}
-      {showForm && <TodoForm modo="crear" onSubmit={createNewTask} />}
+      {showForm && <TodoForm modo="crear" onSubmit={createNewTask}
+       onCancel={() => setShowForm(false)} />}
 
       <TaskTable
         tasks={tasks}
@@ -164,9 +187,15 @@ const TodoList = () => {
         averageMedium={averageMedium}
         averageLow={averageLow}
         averageAll={averageAll}
+        onCheckAll={checkAll}
+        onUncheckAll={uncheckAll}
       />
 
       <div className="pagination-container">
+      <button onClick={() => setCurrentPage(p => Math.max(p - 5, 0))}
+      disabled={currentPage < 5}>
+        ⏪ Back 5
+       </button>
         <button onClick={() => setCurrentPage(p => Math.max(p - 1, 0))} disabled={currentPage === 0}>
           Previous
         </button>
@@ -174,15 +203,19 @@ const TodoList = () => {
         <button onClick={() => setCurrentPage(p => p + 1)} disabled={tasks.length < 10}>
           Next
         </button>
+        <button onClick={() => setCurrentPage(p => p + 5)}
+          disabled={tasks.length < 10}>
+          ⏩ Forward 5
+        </button>
       </div>
       <div className="averages-container">
   <div className="average-block">
-    <p><strong>Overall average:</strong> {averageAll.toFixed(2)} hours</p>
+    <p><strong>Overall average:</strong> {averageAll.toFixed(2)} minutes</p>
   </div>
   <div className="average-block">
-    <p>High Priority: {averageHigh.toFixed(2)} hours</p>
-    <p>Medium Priority: {averageMedium.toFixed(2)} hours</p>
-    <p>Low Priority: {averageLow.toFixed(2)} hours</p>
+    <p>High Priority: {averageHigh.toFixed(2)} minutes</p>
+    <p>Medium Priority: {averageMedium.toFixed(2)} minutes</p>
+    <p>Low Priority: {averageLow.toFixed(2)} minutes</p>
   </div>
 </div>
     </div>

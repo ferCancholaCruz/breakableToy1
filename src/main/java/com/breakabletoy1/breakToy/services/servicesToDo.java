@@ -48,7 +48,10 @@ public class servicesToDo {
     }
 
     private List<ToDo> applySorting(List<ToDo> tasks, String order) {
-        if (order == null) return tasks;
+        if (order == null || order.isEmpty()) {
+            tasks.sort(Comparator.comparingInt(ToDo::getID));
+            return tasks;
+        }
 
         switch (order) {
             case "PriorityAsc" -> tasks.sort(new SortPrior());

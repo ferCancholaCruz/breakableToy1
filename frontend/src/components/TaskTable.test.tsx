@@ -22,6 +22,8 @@ describe("TaskTable Component", () => {
   const mockDeleteAct = jest.fn();
   const mockEditarTarea = jest.fn();
   const mockToggleSort = jest.fn();
+  const mockOnCheckAll = jest.fn();
+  const mockOnUncheckAll = jest.fn();
 
   beforeEach(() => {
     render(
@@ -39,6 +41,8 @@ describe("TaskTable Component", () => {
         averageMedium={0}
         averageLow={0}
         averageAll={0}
+        onCheckAll={mockOnCheckAll}
+        onUncheckAll={mockOnUncheckAll}
       />
     );
   });

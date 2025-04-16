@@ -12,6 +12,8 @@ interface TaskFiltersProps {
   onApplyFilter: () => void;
 }
 
+
+
 const TaskFilters: React.FC<TaskFiltersProps> = ({
   nameFilter,
   setNameFilter,
@@ -20,7 +22,14 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
   stateFilter,
   setStateFilter,
   onApplyFilter,
-}) => (
+}) => {
+  const cleanFilter =() => {
+    setNameFilter("");
+    setPriorFilter("");
+    setStateFilter("");
+  };
+
+return(
   <div className="filters-container">
   <div className="filter-group">
     <label htmlFor="name">Name</label>
@@ -62,8 +71,12 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
   <div className="filter-button">
     <button onClick={onApplyFilter}>Search</button>
   </div>
+  <div className="clean-button">
+    <button onClick={cleanFilter}>Clean</button>
+  </div>
 </div>
 
 );
+}
 
 export default TaskFilters;
