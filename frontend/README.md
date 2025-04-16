@@ -8,7 +8,7 @@ This is the frontend of BreakToy, a task management system built with React and 
 - Mark tasks as done or undone
 - Filter tasks by name, priority, and status
 - Sort tasks by priority and/or due date
-- Paginate task results
+- Paginate task results 
 - Display average completion time per priority level (high, medium, low)
 
 ## Technologies Used
