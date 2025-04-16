@@ -136,7 +136,7 @@ const TodoList = () => {
     await (done ? markTaskUndone(id) : markTaskDone(id));
     if (shouldReload) {
       await loadTasks(currentOrder, filterString);
-      await fetchAllPaginatedTasks(); // recalcula promedios globales
+      await fetchAllPaginatedTasks();
     }
   };
 
