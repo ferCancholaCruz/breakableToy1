@@ -11,6 +11,7 @@ import {
   updateTask,
 } from "../services/TaskService";
 
+
 interface Task {
   id: number;
   name: string;
@@ -20,6 +21,7 @@ interface Task {
   doneDate: string | null;
   creationDate: string;
 }
+
 
 interface TaskFormData {
   name: string;
