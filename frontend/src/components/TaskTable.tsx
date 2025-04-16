@@ -76,6 +76,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
 }) => {
   const [checkAllActive, setCheckAllActive] = useState(false);
 
+  
 
   return(
   <>
@@ -83,7 +84,16 @@ const TaskTable: React.FC<TaskTableProps> = ({
       <thead>
         <tr>
         <th>
-
+        {/* <input type="checkbox" checked={checkAllActive} onChange={() => {
+          if (checkAllActive) {
+            onCheckAll();
+          } else {
+            onUncheckAll();
+          }
+          setCheckAllActive(!checkAllActive);
+        }}
+          
+          /> */}
           Done
           </th>
           <th>Name</th>
