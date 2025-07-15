@@ -1,0 +1,16 @@
+INSERT INTO todos (name, due_date, flag_done, done_date, priority, creation_date) VALUES
+('Submit project proposal', '2025-07-17', true, '2025-07-05', 'High', '2025-07-03'),
+('Grocery shopping', '2025-07-18', false, null, 'Medium', '2025-07-10'),
+('Dentist appointment', '2025-07-19', true, '2025-07-08', 'Low', '2025-07-07'),
+('Write blog post', '2025-07-21', false, null, 'High', '2025-07-08'),
+('Plan vacation', '2025-07-20', true, '2025-07-09', 'Medium', '2025-07-05'),
+('Read a book', '2025-07-22', false, null, 'Low', '2025-07-09'),
+('Fix the bike', '2025-07-27', false, null, 'Medium', '2025-07-07'),
+('Organize meeting', '2025-07-23', true, '2025-07-07', 'High', '2025-07-06'),
+('Code refactoring', '2025-07-24', false, null, 'Medium', '2025-07-11'),
+('Water the plants', '2025-07-25', true, '2025-07-08', 'Low', '2025-07-07'),
+('Tidy up workspace', '2025-07-26', false, null, 'High', '2025-07-10'),
+('Email client follow-up', '2025-07-28', true, '2025-07-08', 'Medium', '2025-07-06'),
+('Review pull requests', '2025-07-29', false, null, 'High', '2025-07-07'),
+('Backup files', '2025-07-30', false, null, 'Low', '2025-07-06'),
+('Practice presentation', '2025-07-31', true, '2025-07-07', 'Medium', '2025-07-06');
