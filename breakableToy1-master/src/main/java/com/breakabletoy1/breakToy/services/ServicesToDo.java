@@ -2,15 +2,11 @@ package com.breakabletoy1.breakToy.services;
 
 import com.breakabletoy1.breakToy.repositoryLayer.ToDoRepository;
 import com.breakabletoy1.breakToy.domain.ToDo;
-import com.breakabletoy1.breakToy.helpers.ToDoControllerHelper;
-import com.breakabletoy1.breakToy.sorts.SortBoth;
-import com.breakabletoy1.breakToy.sorts.SortDueDate;
-import com.breakabletoy1.breakToy.sorts.SortPrior;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
 @Service
 public class ServicesToDo {
@@ -22,74 +18,56 @@ public class ServicesToDo {
         this.repository = repository;
     }
 
-    public List<ToDo> getFilteredTasks(int page, String order, Boolean done, String name, String priority) {
-        List<ToDo> filtered = applyFilters(done, name, priority);
-        filtered = applySorting(filtered, order);
-        return paginate(page, filtered);
+    public Page<ToDo> getFilteredTasks(int page, String order, Boolean done, String name, String priority) {
+        Sort sort = getSort(order);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
+
+        // Lógica dinámica: se delega completamente al repositorio
+        if (done != null && name != null && priority != null) {
+            return repository.findByFlagDoneAndNameContainingIgnoreCaseAndPriorityIgnoreCase(done, name, priority, pageable);
+        } else if (done != null && name != null) {
+            return repository.findByFlagDoneAndNameContainingIgnoreCase(done, name, pageable);
+        } else if (done != null && priority != null) {
+            return repository.findByFlagDoneAndPriorityIgnoreCase(done, priority, pageable);
+        } else if (name != null && priority != null) {
+            return repository.findByNameContainingIgnoreCaseAndPriorityIgnoreCase(name, priority, pageable);
+        } else if (done != null) {
+            return repository.findByFlagDone(done, pageable);
+        } else if (name != null) {
+            return repository.findByNameContainingIgnoreCase(name, pageable);
+        } else if (priority != null) {
+            return repository.findByPriorityIgnoreCase(priority, pageable);
+        } else {
+            return repository.findAll(pageable);
+        }
     }
 
-    private List<ToDo> applyFilters(Boolean done, String name, String priority) {
-        return repository.findAll().stream()
-                .filter(task -> done == null || task.getFlagDone() == done)
-                .filter(task -> name == null || task.getName().contains(name))
-                .filter(task -> priority == null || priority.equalsIgnoreCase(task.getPriority()))
-                .collect(Collectors.toList());
-    }
-
-    private List<ToDo> applySorting(List<ToDo> tasks, String order) {
-        tasks.sort(getSort(order));
-        return tasks;
-    }
-
-    private Comparator<ToDo> getSort(String order) {
+    private Sort getSort(String order) {
         if (order == null || order.isEmpty()) {
-            return Comparator.comparingLong(ToDo::getID); // ✅ Changed from comparingInt to comparingLong
+            return Sort.by("id").ascending(); // por defecto
         }
 
         return switch (order) {
-            case "PriorityAsc" -> new SortPrior();
-            case "PriorityDesc" -> Collections.reverseOrder(new SortPrior());
-            case "DueDateAsc" -> new SortDueDate();
-            case "DueDateDesc" -> Collections.reverseOrder(new SortDueDate());
-            case "BothAsc" -> new SortBoth();
-            case "BothDesc" -> Collections.reverseOrder(new SortBoth());
-            case "PriorityAscDueDesc" -> priorityThenDueDate(true, false);
-            case "PriorityDescDueAsc" -> priorityThenDueDate(false, true);
-            default -> Comparator.comparingLong(ToDo::getID); // ✅ Changed from comparingInt to comparingLong
+            case "PriorityAsc" -> Sort.by("priority").ascending();
+            case "PriorityDesc" -> Sort.by("priority").descending();
+            case "DueDateAsc" -> Sort.by("dueDate").ascending();
+            case "DueDateDesc" -> Sort.by("dueDate").descending();
+            case "BothAsc" -> Sort.by("priority").ascending().and(Sort.by("dueDate").ascending());
+            case "BothDesc" -> Sort.by("priority").descending().and(Sort.by("dueDate").descending());
+            case "PriorityAscDueDesc" -> Sort.by("priority").ascending().and(Sort.by("dueDate").descending());
+            case "PriorityDescDueAsc" -> Sort.by("priority").descending().and(Sort.by("dueDate").ascending());
+            default -> Sort.by("id").ascending();
         };
-    }
-
-    private Comparator<ToDo> priorityThenDueDate(boolean ascPriority, boolean ascDueDate) {
-        return (a, b) -> {
-            int p1 = ToDoControllerHelper.getPriorityValue(a.getPriority());
-            int p2 = ToDoControllerHelper.getPriorityValue(b.getPriority());
-            int comp = ascPriority ? Integer.compare(p1, p2) : Integer.compare(p2, p1);
-
-            if (comp == 0 && a.getDueDate() != null && b.getDueDate() != null) {
-                return ascDueDate
-                        ? a.getDueDate().compareTo(b.getDueDate())
-                        : b.getDueDate().compareTo(a.getDueDate());
-            }
-            return comp;
-        };
-    }
-
-    private List<ToDo> paginate(int page, List<ToDo> list) {
-        int start = page * PAGE_SIZE;
-        int end = Math.min(start + PAGE_SIZE, list.size());
-        if (start >= list.size()) return List.of();
-        return list.subList(start, end);
     }
 
     public ToDo create(ToDo todo) {
-        // Removed manual ID assignment — now handled by JPA via @GeneratedValue
         todo.setCreationDate(LocalDate.now());
         return repository.save(todo);
     }
 
     public ToDo deleteById(Long id) {
         ToDo task = getOrThrow(id);
-        repository.deleteById(id); //  Using Spring Data JPA method
+        repository.deleteById(id);
         return task;
     }
 
@@ -125,7 +103,6 @@ public class ServicesToDo {
     }
 
     private ToDo getOrThrow(Long id) {
-        // ✅ Switched to Long instead of int, and using JPA method
         return repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found with ID: " + id));
     }

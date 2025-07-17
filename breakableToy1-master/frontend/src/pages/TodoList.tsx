@@ -35,6 +35,12 @@ const TodoList = () => {
     loadTasks();
   };
 
+  // ✅ Nuevo: función para eliminar con recarga
+  const deleteAndReload = async (id: number) => {
+    await deleteTask(id);
+    loadTasks();
+  };
+
   return (
     <div>
       <h2 className="task-title">Task Manager</h2>
@@ -65,23 +71,24 @@ const TodoList = () => {
         />
       )}
 
-      <TaskTable
-        tasks={tasks}
-        editandoId={editingId}
-        setEditandoId={setEditingId}
-        flagDone={flagDone}
-        deleteAct={deleteTask}
-        editarTarea={editTask}
-        toggleSort={toggleSort}
-        priorityArrow={priorityArrow}
-        dueArrow={dueArrow}
-        averageHigh={stats.values.High}
-        averageMedium={stats.values.Medium}
-        averageLow={stats.values.Low}
-        averageAll={stats.values.All}
-        onCheckAll={checkAll}
-        onUncheckAll={uncheckAll}
-      />
+<TaskTable
+  tasks={tasks}
+  editandoId={editingId}
+  setEditandoId={setEditingId}
+  flagDone={flagDone}
+  deleteAct={deleteAndReload} // ✅ Usamos la nueva función
+  editarTarea={editTask}
+  toggleSort={toggleSort}
+  priorityArrow={priorityArrow}
+  dueArrow={dueArrow}
+  averageHigh={stats.values.High}
+  averageMedium={stats.values.Medium}
+  averageLow={stats.values.Low}
+  averageAll={stats.values.All}
+  onCheckAll={checkAll}
+  onUncheckAll={uncheckAll}
+/>
+
 
       <div className="pagination-container">
         <button

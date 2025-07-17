@@ -2,9 +2,8 @@ package com.breakabletoy1.breakToy.controllers;
 
 import com.breakabletoy1.breakToy.domain.ToDo;
 import com.breakabletoy1.breakToy.services.ServicesToDo;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/todos")
@@ -17,7 +16,7 @@ public class ToDoController {
     }
 
     @GetMapping
-    public List<ToDo> getTasks(
+    public Page<ToDo> getTasks(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) String order,
             @RequestParam(required = false) Boolean done,
@@ -33,22 +32,22 @@ public class ToDoController {
     }
 
     @DeleteMapping("/{id}")
-    public ToDo deleteTask(@PathVariable Long id) { // ID changed from int to Long to match entity
-        return service.deleteById(id); // Uses Long now
+    public ToDo deleteTask(@PathVariable Long id) {
+        return service.deleteById(id);
     }
 
     @PutMapping("/{id}")
-    public ToDo editTask(@RequestBody ToDo input, @PathVariable Long id) { //  ID changed
-        return service.update(id, input); //  Uses Long now
+    public ToDo editTask(@RequestBody ToDo input, @PathVariable Long id) {
+        return service.update(id, input);
     }
 
     @PostMapping("/{id}/done")
-    public ToDo markDone(@PathVariable Long id) { //  ID changed
-        return service.markDone(id); //  Uses Long now
+    public ToDo markDone(@PathVariable Long id) {
+        return service.markDone(id);
     }
 
     @PostMapping("/{id}/undone")
-    public ToDo markUndone(@PathVariable Long id) { //  ID changed
-        return service.markUndone(id); //  Uses Long now
+    public ToDo markUndone(@PathVariable Long id) {
+        return service.markUndone(id);
     }
 }

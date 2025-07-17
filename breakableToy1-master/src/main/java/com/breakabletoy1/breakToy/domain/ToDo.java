@@ -5,19 +5,14 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
-//entity: this class is a table
-//table name, the name of the table is going to be todos
 @Entity
 @Table(name = "todos")
 public class ToDo {
 
-    //id is going to be the primary key attribute
-    //generated value, is going to be generated automatically
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ID;
+    private Long id;
 
-    //column, create certain restrictions
     @Column(length = 120, nullable = false)
     private String name;
 
@@ -34,16 +29,12 @@ public class ToDo {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate creationDate;
 
-    //
     public ToDo() {
     }
 
-    // constructor
-    public ToDo(Long ID, String name, boolean flagDone, String priority, LocalDate creationDate, LocalDate doneDate) {
-        if (name == null || name.length() > 120) {
-            throw new IllegalArgumentException("Name can't be empty or more than 120 letters");
-        }
-        this.ID = ID;
+    public ToDo(Long id, String name, boolean flagDone, String priority, LocalDate creationDate, LocalDate doneDate) {
+        validateName(name);
+        this.id = id;
         this.name = name;
         this.flagDone = flagDone;
         this.priority = priority;
@@ -51,14 +42,19 @@ public class ToDo {
         this.doneDate = doneDate;
     }
 
-    // Getters y setters
-
-    public Long getID() {
-        return ID;
+    // ✅ Validación centralizada
+    private void validateName(String name) {
+        if (name == null || name.length() > 120) {
+            throw new IllegalArgumentException("Name can't be empty or more than 120 letters");
+        }
     }
 
-    public void setID(Long ID) {
-        this.ID = ID;
+    public Long getID() {
+        return id;
+    }
+
+    public void setID(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -66,9 +62,7 @@ public class ToDo {
     }
 
     public void setName(String name) {
-        if (name == null || name.length() > 120) {
-            throw new IllegalArgumentException("Name can't be empty or more than 120 letters");
-        }
+        validateName(name);
         this.name = name;
     }
 

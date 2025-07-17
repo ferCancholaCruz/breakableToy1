@@ -12,6 +12,7 @@ export function useTaskList() {
   const [priorityArrow, setPriorityArrow] = useState<"none" | "asc" | "desc">("none");
   const [dueArrow, setDueArrow] = useState<"none" | "asc" | "desc">("none");
   const [order, setOrder] = useState<string | undefined>();
+  const [totalPages, setTotalPages] = useState(0); // 👈 NUEVO
 
   const filters = useTaskFilters();
   const stats = useTaskStats();
@@ -22,9 +23,10 @@ export function useTaskList() {
   }, [currentPage, order, filters.buildFilterString()]);
 
   const loadTasks = async () => {
-    const raw = await fetchTasks(currentPage, order, filters.buildFilterString()) || [];
-    const transformed = raw.map((t: any) => ({ ...t, done: t.flagDone }));
+    const raw = await fetchTasks(currentPage, order, filters.buildFilterString());
+    const transformed = raw.content.map((t: any) => ({ ...t, done: t.flagDone }));
     setTasks(transformed);
+    setTotalPages(raw.totalPages); // 👈 para paginación real
   };
 
   const fetchAllPaginatedTasks = async () => {
@@ -32,10 +34,10 @@ export function useTaskList() {
     let all: Task[] = [];
     let keepGoing = true;
     while (keepGoing) {
-      const raw = await fetchTasks(page, order, filters.buildFilterString()) || [];
-      const transformed = raw.map((t: any) => ({ ...t, done: t.flagDone }));
+      const raw = await fetchTasks(page, order, filters.buildFilterString());
+      const transformed = raw.content.map((t: any) => ({ ...t, done: t.flagDone }));
       all = [...all, ...transformed];
-      keepGoing = transformed.length === 10;
+      keepGoing = page + 1 < raw.totalPages;
       page++;
     }
     stats.updateStats(all);
@@ -99,5 +101,6 @@ export function useTaskList() {
     flagDone,
     checkAll,
     uncheckAll,
+    totalPages // 👈 lo podés usar si querés mostrar botones reales de página
   };
 }

@@ -4,6 +4,7 @@ import com.breakabletoy1.breakToy.domain.ToDo;
 import com.breakabletoy1.breakToy.repositoryLayer.ToDoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -11,7 +12,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class servicesToDoTest {
+public class ServicesToDoTest {
 
     private ToDoRepository repository;
     private ServicesToDo service;
@@ -52,19 +53,25 @@ public class servicesToDoTest {
     }
 
     @Test
-    void testUpdateToDoNameTooLong() {
+    void testUpdateToDoInvalidInputFields() {
+        // arrange
         ToDo original = new ToDo(1L, "Old", false, "Low", LocalDate.now(), null);
         when(repository.findById(1L)).thenReturn(Optional.of(original));
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            ToDo updated = new ToDo();
-            updated.setName("X".repeat(130));  // Esto lanza la excepción aquí, ahora sí dentro del assertThrows
-            updated.setPriority("Low");
-            updated.setDueDate(LocalDate.now());
-            service.update(1L, updated);       // Esta línea ya no es necesaria si el setter lanza
-        });
-    }
+        ToDo updated = new ToDo();
+        updated.setName("valid");           // válido por ahora
+        updated.setPriority("Medium");
+        updated.setDueDate(LocalDate.now());
 
+        // act & assert
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> {
+            updated.setName("X".repeat(130)); // nombre inválido
+            service.update(1L, updated);
+        });
+
+        String msg = ex.getMessage();
+        assertTrue(msg.contains("Name"));
+    }
 
     @Test
     void testMarkDoneSetsDateAndFlag() {
@@ -109,16 +116,23 @@ public class servicesToDoTest {
 
     @Test
     void testGetFilteredTasksReturnsPaginatedAndSorted() {
+        // arrange
         List<ToDo> data = new ArrayList<>();
         for (long i = 1; i <= 15; i++) {
             data.add(new ToDo(i, "Task " + i, i % 2 == 0, "Medium", LocalDate.now(), null));
         }
 
-        when(repository.findAll()).thenReturn(data);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("ID").ascending());
+        Page<ToDo> page = new PageImpl<>(data.subList(0, 10), pageable, data.size());
 
-        List<ToDo> result = service.getFilteredTasks(0, null, null, null, null);
+        when(repository.findAll(any(Pageable.class))).thenReturn(page);
 
-        assertEquals(10, result.size()); // PAGE_SIZE is 10
-        assertEquals("Task 1", result.get(0).getName());
+        // act
+        Page<ToDo> result = service.getFilteredTasks(0, null, null, null, null);
+
+        // assert
+        assertNotNull(result);
+        assertEquals(10, result.getContent().size());
+        assertEquals("Task 1", result.getContent().get(0).getName());
     }
 }
