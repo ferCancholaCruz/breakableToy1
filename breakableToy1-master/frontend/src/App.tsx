@@ -1,5 +1,7 @@
 import React from 'react';
 import TodoList from './pages/TodoList'; 
+import "./styles/AppStyles.css";
+
 
 function App() {
   return (

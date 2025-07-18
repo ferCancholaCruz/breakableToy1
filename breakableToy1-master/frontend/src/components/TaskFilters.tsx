@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/TodoStyles.css";
+import "../styles/FilterStyles.css";
 import { TaskFiltersProps } from "../Types";
 
 const TaskFilters: React.FC<TaskFiltersProps> = ({

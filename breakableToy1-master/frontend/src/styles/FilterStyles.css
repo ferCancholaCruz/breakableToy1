@@ -1,0 +1,90 @@
+/* Filtros */
+.filter-box {
+    border: 1px solid black;
+    padding: 20px;
+    margin: 20px auto;
+    width: 60%;
+    border-radius: 6px;
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  }
+  
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    flex: 1;
+    min-width: 180px;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .filter-group input,
+  .filter-group select {
+    padding: 6px;
+    font-size: 14px;
+    width: 100%;
+    border-radius: 4px;
+  }
+  
+  /* Botón limpiar debajo del último campo */
+  .clean-button {
+    margin-top: 10px;
+    width: fit-content;
+  }
+  
+  .clean-button button {
+    padding: 6px 14px;
+    font-size: 13px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  .clean-button button:hover {
+    background-color: #5a6268;
+  }
+  
+  /* Botón buscar alineado a la derecha */
+  .filter-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+  
+  .filter-button button {
+    padding: 6px 14px;
+    font-size: 13px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  .filter-button button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Modo oscuro */
+  body.dark-mode .filter-box {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+  body.dark-mode input,
+  body.dark-mode select {
+    background-color: #3a3a3a;
+    color: white;
+    border: 1px solid #555;
+  }
+  

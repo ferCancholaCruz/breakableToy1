@@ -2,6 +2,7 @@ import React from "react";
 import TodoForm from "../components/TodoForm";
 import TaskTable from "../components/TaskTable";
 import TaskFilters from "../components/TaskFilters";
+import "../styles/TodoListStyles.css";
 
 import { deleteTask, createTask, updateTask } from "../services/TaskService";
 import { TaskFormData } from "../Types";
@@ -35,14 +36,24 @@ const TodoList = () => {
     loadTasks();
   };
 
-  // ✅ Nuevo: función para eliminar con recarga
   const deleteAndReload = async (id: number) => {
     await deleteTask(id);
     loadTasks();
   };
 
+  const toggleDarkMode = () => {
+    document.body.classList.toggle("dark-mode");
+  };
+
   return (
     <div>
+      {/* 🌙 Toggle Dark Mode Button */}
+      <div style={{ textAlign: "right", margin: "10px 30px" }}>
+        <button className="toggle-dark-mode" onClick={toggleDarkMode}>
+          🌙 Toggle Dark Mode
+        </button>
+      </div>
+
       <h2 className="task-title">Task Manager</h2>
 
       <div className="filter-box">
@@ -71,24 +82,23 @@ const TodoList = () => {
         />
       )}
 
-<TaskTable
-  tasks={tasks}
-  editandoId={editingId}
-  setEditandoId={setEditingId}
-  flagDone={flagDone}
-  deleteAct={deleteAndReload} // ✅ Usamos la nueva función
-  editarTarea={editTask}
-  toggleSort={toggleSort}
-  priorityArrow={priorityArrow}
-  dueArrow={dueArrow}
-  averageHigh={stats.values.High}
-  averageMedium={stats.values.Medium}
-  averageLow={stats.values.Low}
-  averageAll={stats.values.All}
-  onCheckAll={checkAll}
-  onUncheckAll={uncheckAll}
-/>
-
+      <TaskTable
+        tasks={tasks}
+        editandoId={editingId}
+        setEditandoId={setEditingId}
+        flagDone={flagDone}
+        deleteAct={deleteAndReload}
+        editarTarea={editTask}
+        toggleSort={toggleSort}
+        priorityArrow={priorityArrow}
+        dueArrow={dueArrow}
+        averageHigh={stats.values.High}
+        averageMedium={stats.values.Medium}
+        averageLow={stats.values.Low}
+        averageAll={stats.values.All}
+        onCheckAll={checkAll}
+        onUncheckAll={uncheckAll}
+      />
 
       <div className="pagination-container">
         <button
@@ -120,12 +130,23 @@ const TodoList = () => {
 
       <div className="averages-container">
         <div className="average-block">
-          <p><strong>Overall average:</strong> {stats.formatted.averageAll}</p>
+          <p>
+            <strong>Overall average:</strong> {stats.formatted.averageAll}
+          </p>
         </div>
         <div className="average-block">
-          <p>High Priority: {stats.formatted.averageHigh}</p>
-          <p>Medium Priority: {stats.formatted.averageMedium}</p>
-          <p>Low Priority: {stats.formatted.averageLow}</p>
+          <p>
+            <span className="priority-indicator priority-high"></span>
+            High Priority: {stats.formatted.averageHigh}
+          </p>
+          <p>
+            <span className="priority-indicator priority-medium"></span>
+            Medium Priority: {stats.formatted.averageMedium}
+          </p>
+          <p>
+            <span className="priority-indicator priority-low"></span>
+            Low Priority: {stats.formatted.averageLow}
+          </p>
         </div>
       </div>
     </div>

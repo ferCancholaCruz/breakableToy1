@@ -1,20 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TodoForm from "./TodoForm";
-import "../styles/TodoStyles.css";
-import { Task, TaskTableProps } from "../Types"; 
-
-
-
-const getRowStyle = (dueDate: string | null) => {
-  if (!dueDate) return {};
-  const today = new Date();
-  const due = new Date(dueDate);
-  const diff = Math.ceil((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-  if (diff <= 7) return { backgroundColor: "#f8d7da" };
-  if (diff <= 14) return { backgroundColor: "#fff3cd" };
-  if (diff > 14) return { backgroundColor: "#d4edda" };
-  return {};
-};
+import "../styles/TaskTableStyles.css";
+import { Task, TaskTableProps } from "../Types";
 
 const getFont = (done: boolean): string => (done ? "doneTask" : "");
 
@@ -82,7 +69,10 @@ const TaskTable: React.FC<TaskTableProps> = ({
         </thead>
         <tbody>
           {tasks.map((t) => (
-            <tr key={t.id} style={getRowStyle(t.dueDate)}>
+            <tr
+              key={t.id}
+              className={`priority-${t.priority}`}
+            >
               <td>
                 <input
                   type="checkbox"
@@ -96,7 +86,11 @@ const TaskTable: React.FC<TaskTableProps> = ({
                   <td colSpan={4}>
                     <TodoForm
                       modo="editar"
-                      valoresIniciales={{ name: t.name, dueDate: t.dueDate, priority: t.priority }}
+                      valoresIniciales={{
+                        name: t.name,
+                        dueDate: t.dueDate,
+                        priority: t.priority,
+                      }}
                       onSubmit={(datos) => editarTarea(t.id, datos)}
                       onCancel={() => setEditandoId(null)}
                     />
@@ -109,8 +103,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
                   <td>{t.dueDate}</td>
                   <td>{t.doneDate || "-"}</td>
                   <td>
-                    <button onClick={() => setEditandoId(t.id)}>Edit</button>
-                    <button onClick={() => deleteAct(t.id)}>Delete</button>
+                    <button className="edit-button" onClick={() => setEditandoId(t.id)}>Edit</button>
+                    <button className="delete-button" onClick={() => deleteAct(t.id)}>Delete</button>
                   </td>
                 </>
               )}

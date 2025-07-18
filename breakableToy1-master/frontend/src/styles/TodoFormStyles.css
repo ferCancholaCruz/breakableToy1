@@ -1,0 +1,119 @@
+/* Filtros */
+.filter-box {
+    border: 1px solid black;
+    padding: 20px;
+    margin: 20px auto;
+    width: 60%;
+    border-radius: 6px;
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  }
+  
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    min-width: 180px;
+    gap: 6px;
+  }
+  
+  /* ✅ INPUT: limpio, sin borde negro feo */
+  .filter-group input[type="text"] {
+    padding: 6px;
+    font-size: 14px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: white;
+    color: #2c3e50;
+    box-shadow: none;
+    outline: none;
+  }
+  
+  .filter-group input[type="text"]:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: none;
+  }
+  
+  /* 📅 otros inputs */
+  .filter-group input[type="date"] {
+    padding: 6px;
+    font-size: 14px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  /* ✅ SELECTS más cortos */
+  .filter-group select {
+    padding: 6px;
+    font-size: 14px;
+    width: fit-content;
+    min-width: 100px;
+    max-width: 140px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  /* Botones alineados horizontalmente (sin cambiar JSX) */
+  .filter-box > .clean-button,
+  .filter-box > .filter-button {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 10px;
+    margin-top: 12px;
+    margin-right: 10px;
+  }
+  
+  .clean-button button,
+  .filter-button button {
+    padding: 6px 14px;
+    font-size: 13px;
+    height: 36px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  /* Botón Search */
+  .filter-button button {
+    background-color: #007bff;
+    color: white;
+  }
+  .filter-button button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Botón Clean */
+  .clean-button button {
+    background-color: #6c757d;
+    color: white;
+  }
+  .clean-button button:hover {
+    background-color: #5a6268;
+  }
+  
+  /* 🌙 Modo oscuro */
+  body.dark-mode .filter-box {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+  
+  body.dark-mode .filter-group input[type="text"],
+  body.dark-mode .filter-group input[type="date"],
+  body.dark-mode .filter-group select {
+    background-color: #3a3a3a;
+    color: white;
+    border: 1px solid #555;
+  }
+  

@@ -1,0 +1,121 @@
+/* Estilos para la tabla de tareas */
+.task-table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+    table-layout: fixed; /* Evita que se muevan las columnas al hacer sort */
+  }
+  
+  /* Anchos fijos por columna (ajustables) */
+  .task-table th:nth-child(1),
+  .task-table td:nth-child(1) {
+    width: 80px;
+  }
+  .task-table th:nth-child(2),
+  .task-table td:nth-child(2) {
+    width: 200px;
+  }
+  .task-table th:nth-child(3),
+  .task-table td:nth-child(3),
+  .task-table th:nth-child(4),
+  .task-table td:nth-child(4) {
+    width: 140px;
+  }
+  .task-table th:nth-child(5),
+  .task-table td:nth-child(5),
+  .task-table th:nth-child(6),
+  .task-table td:nth-child(6) {
+    width: 100px;
+  }
+  
+  .task-table th,
+  .task-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    box-sizing: border-box;
+  }
+  
+  .task-table th {
+    background-color: #f5f5f5;
+    cursor: pointer;
+    padding-right: 10px;
+    position: relative;
+  }
+  
+  /* ✅ No se incluyen flechas desde CSS,
+     ya que vienen renderizadas desde React (getArrow) */
+  
+  /* Prioridades unificadas */
+  .priority-High {
+    background-color: #d76d6d;
+    color: #1e1e1e;
+  }
+  .priority-Medium {
+    background-color: #e2c16e;
+    color: #1e1e1e;
+  }
+  .priority-Low {
+    background-color: #8cbf7c;
+    color: #1e1e1e;
+  }
+  
+  /* Modo oscuro: filas por prioridad */
+  body.dark-mode .task-table .priority-High td {
+    background-color: #d76d6d !important;
+    color: #1e1e1e !important;
+  }
+  body.dark-mode .task-table .priority-Medium td {
+    background-color: #e2c16e !important;
+    color: #1e1e1e !important;
+  }
+  body.dark-mode .task-table .priority-Low td {
+    background-color: #8cbf7c !important;
+    color: #1e1e1e !important;
+  }
+  
+  /* Modo oscuro: otras celdas */
+  body.dark-mode .task-table tr:not([class*="priority-"]) td {
+    background-color: #1e1e1e;
+    color: #eee;
+  }
+  body.dark-mode .task-table th {
+    background-color: #2f2f2f;
+    color: #f0f0f0;
+  }
+  
+  /* Texto tachado si está completado */
+  .doneTask {
+    text-decoration: line-through;
+  }
+  
+  /* Botones editar y eliminar */
+  .edit-button,
+  .delete-button {
+    margin-right: 6px;
+    padding: 5px 10px;
+    font-size: 13px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .edit-button {
+    background-color: #17a2b8;
+    color: white;
+  }
+  .edit-button:hover {
+    background-color: #138496;
+  }
+  
+  .delete-button {
+    background-color: #dc3545;
+    color: white;
+  }
+  .delete-button:hover {
+    background-color: #c82333;
+  }
+  

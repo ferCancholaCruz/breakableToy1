@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/TodoStyles.css";
+import "../styles/TodoFormStyles.css";
 
 interface DatosForm {
   name: string;
